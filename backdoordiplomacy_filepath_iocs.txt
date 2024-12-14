@@ -1,0 +1,132 @@
+ c:\program files\windows nt\1.exe
+ c:\program files\windows nt\credwiz.exe
+ c:\program files\windows nt\duser.dll
+ c:\program files\windows nt\st.exe
+ c:\program files\windows nt\sw.exe
+ c:\programdata\canon\oippesp\bb\duser.dll
+ c:\programdata\canon\oippesp\bb\uhsrvc.exe
+ c:\programdata\canon\oippesp\bb\winlogout.exe
+ c:\programdata\comms\ag.exe
+ c:\programdata\comms\cc.exe
+ c:\programdata\comms\igfxpers.exe
+ c:\programdata\comms\info.dat
+ c:\programdata\comms\msd.exe
+ c:\programdata\comms\rar.exe
+ c:\programdata\comms\sll.bat
+ c:\programdata\comms\ss.exe
+ c:\programdata\comms\w3w.exe
+ c:\programdata\comms\winlogout.exe
+ c:\programdata\comms\wmiap.exe
+ c:\programdata\filebeat\sim.bat
+ c:\programdata\intel\gcc\sll.bat
+ c:\programdata\microsoft\devicesync\devicesync.exe
+c:\programdata\microsoft\devicesync\devicesync.exe.exe
+c:\programdata\microsoft\devicesync\log.bat
+c:\programdata\microsoft\devicesync\log1.bat
+c:\programdata\microsoft\devicesync\sdk.dll
+c:\programdata\microsoft\diagnosis\etllogs\bin\reauto.bat
+c:\programdata\microsoft\diagnosis\etllogs\bin\s.bat
+c:\programdata\microsoft\diagnosis\etllogs\bin\shfolder.dll
+c:\programdata\microsoft\diagnosis\etllogs\bin\variety.mof
+c:\programdata\microsoft\diagnosis\etllogs\bin\vmnat.dll
+c:\programdata\microsoft\diagnosis\etllogs\bin\vmnat.exe
+c:\programdata\microsoft\diagnosis\etllogs\shfolder.dll
+c:\programdata\microsoft\diagnosis\etllogs\variety.mof
+c:\programdata\microsoft\diagnosis\etllogs\vmnat.dll
+c:\programdata\microsoft\diagnosis\etllogs\vmnat.exe
+c:\programdata\microsoft\drm\server\drm.exe
+c:\programdata\microsoft\drm\server\s-1-5-18\cert-machine.dll
+c:\programdata\microsoft\drm\server\s-1-5-18\cert-machine.exe
+c:\programdata\microsoft\group policy\trace\configer.dat
+c:\programdata\microsoft\group policy\trace\pc2msupp.dll
+c:\programdata\microsoft\group policy\trace\winseucerwmiload.dat
+c:\programdata\microsoft\group policy\trace\winseucerwmiload.exe
+c:\programdata\microsoft\group policy\trace\winseucerwmiload.ini
+c:\programdata\microsoft\netframework\breadcrumbstore\ngen\nv.mpc
+c:\programdata\microsoft\netframework\breadcrumbstore\ngen\nv.mpc
+c:\programdata\microsoft\netframework\breadcrumbstore\ngen\nvsmartmax.dll
+c:\programdata\microsoft\netframework\breadcrumbstore\ngen\nvsmartmax.dll
+c:\programdata\microsoft\netframework\breadcrumbstore\ngen\run.bat
+c:\programdata\microsoft\network\connections\lsh.bat
+c:\programdata\microsoft\network\connections\netserver.exe
+c:\programdata\microsoft\uev\wmiap.exe
+c:\programdata\microsoft\vault\1.rar
+c:\programdata\microsoft\vault\111.bat
+c:\programdata\microsoft\vault\ass.bat
+c:\programdata\microsoft\vault\e.exe
+c:\programdata\microsoft\vault\f.bat
+c:\programdata\microsoft\vault\igfxpers.exe
+c:\programdata\microsoft\vault\nimscan.exe
+c:\programdata\microsoft\vault\pt.exe
+c:\programdata\microsoft\vault\rar.exe
+c:\programdata\microsoft\vault\sf.exe
+c:\programdata\microsoft\vault\sps.exe
+c:\programdata\microsoft\vault\ss.bat
+c:\programdata\microsoft\wdf\logoutui.exe
+c:\programdata\microsoft\windows\devicemetadatastore\en-us\nvsmartmax.dll
+c:\programdata\microsoft\windows\pt.exe
+c:\programdata\microsoft\windows\sqm\upload\logoutui.exe
+c:\programdata\ssh\sll.bat
+c:\programdata\usoprivate\updatestore\in.bat
+c:\programdata\usoshared\logs\user\updatesrv.exe
+c:\programdata\winseucitysys001\windefenderlogin\winsecunicity.exe
+c:\programdata\wmiappsecuserv\wmiappsilveration\configer.dat
+c:\programdata\wmiappsecuserv\wmiappsilveration\pc2msupp.dll
+c:\programdata\wmiappsecuserv\wmiappsilveration\winsecunicity.dat
+c:\programdata\wmiappsecuserv\wmiappsilveration\winsecunicity.exe
+c:\programdata\wmiappsecuserv\wmiappsilveration\winsecunicity.ini
+c:\windows\alg.exe
+c:\windows\apppatch\apppatch64\shfolder.dll
+c:\windows\apppatch\custom\custom64\const.mof
+c:\windows\apppatch\custom\custom64\epprotected.exe
+c:\windows\apppatch\custom\custom64\instsrv.exe
+c:\windows\apppatch\custom\custom64\lsh.bat
+c:\windows\apppatch\custom\custom64\rdpsrv.exe
+c:\windows\apppatch\custom\custom64\sll.bat
+c:\windows\apppatch\custom\custom64\srvany.exe
+c:\windows\apppatch\custom\custom64\variety.mof
+c:\windows\assembly\temp\ahoax2nypi\rundll64.exe
+c:\windows\assembly\temp\ahoax2nypi\variety.mof
+c:\windows\com\1025\agent64.exe
+c:\windows\com\2.bat
+c:\windows\com\3.bat
+c:\windows\com\agent.exe
+c:\windows\com\igfxpers.exe
+c:\windows\com\info.bat
+c:\windows\com\info.txt
+c:\windows\com\mstsc.bat
+c:\windows\com\nbtscan.exe
+c:\windows\com\rar.exe
+c:\windows\com\taskmgr.exe
+c:\windows\com\tscan.exe
+c:\windows\coms\sll.bat
+c:\windows\diagtrack\settings\reauto.bat
+c:\windows\inf\wmiaprpl\if.dat
+c:\windows\inf\wmiaprpl\in.dat
+c:\windows\inf\wmiaprpl\info.dat
+c:\windows\inf\wmiaprpl\lsh.bat
+c:\windows\inf\wmiaprpl\skypesrv.exe
+c:\windows\inf\wmiaprpl\sll.bat
+c:\windows\miracastview\pris\const.mof
+c:\windows\miracastview\pris\lsh.bat
+c:\windows\miracastview\pris\reauto.bat
+c:\windows\miracastview\pris\tabtip64.exe
+c:\windows\miracastview\pris\updatesrv.exe
+c:\windows\miracastview\pris\variety.mof
+c:\windows\registration\crmlog\2.bat
+c:\windows\registration\crmlog\logoutui.exe
+c:\windows\sysvol\<user>\scripts\lsh.bat
+c:\windows\sysvol\<user>\scripts\sim.bat
+c:\windows\syswow64\appmgmt.dll
+c:\windows\syswow64\bits.dll
+c:\windows\temp\crashpad\svchost.bat
+c:\windows\temp\exe.bat
+c:\windows\temp\exe1.bat
+c:\windows\temp\ntds.bat
+c:\windows\temp\pd.bat
+c:\windows\temp\set.txt
+c:\windows\temp\sll.bat
+c:\windows\temp\sys.bat
+c:\windows\temp\test.dat
+c:\windows\temp\trecert.bat
+c:\windows\web\wallpaper\windows\wordpadfilter.exe
