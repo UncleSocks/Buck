@@ -297,14 +297,56 @@ $BackdoorDiplomacy = @{
            Files = @(
            "wordpadfilter.exe"
            )
+        },
+        @{ Path = "c:\users\<user>\Documents\"
+           Files = @(
+           "Untitled2.ps1"
+           )
         }
     )
 }
 
 
+Function Confirm-UsersDirectory {
+    param([String]$Path)
+
+    $NewPaths = @()
+    $Users = Get-ChildItem -Path "c:\users\" -Name -Exclude "Public"
+
+    foreach ($User in $Users) {
+        $NewPath = $Path.Replace("<user>", $user)
+        $NewPaths += $NewPath
+    }
+
+    Return $NewPaths
+
+}
 
 
-Function Search-FilePathIOCs { 
+Function Search-FilePathIOCs {
+    param([String]$Path,
+          [Array]$Files
+         )
+
+    if (Test-Path -Path $Path) {
+        Write-Output "Directory $Path exists. Checking for IOC files..."
+
+        $ExistingFiles = $Files | Where-Object { Test-Path (Join-Path -Path $Path -ChildPath $_) }
+        if ($ExistingFiles) {
+            Write-Output "Potential file IOCs found under $Path"
+            $ExistingFiles | ForEach-Object { Write-Output "$_ found!" }
+        } else {
+            Write-Output "No files present under the $Path"
+        }
+    } else {
+        Write-Output "Directory $Path not found"
+    }
+
+    Return
+}
+
+
+Function Get-FilePathIOCs { 
     
     $Name = $Group.Name
     Write-Output "Looking for file path IOCs of group: $Name"
@@ -313,24 +355,22 @@ Function Search-FilePathIOCs {
         $Path = $FilePathIOC.Path
         $Files = $FilePathIOC.Files
 
-        Write-Output "`n"
+        #Write-Output "`n"
 
-        if (Test-Path -Path $Path) {
-            Write-Output "Directory $Path exists. Checking for IOC files..."
+        if ($Path.Contains("\<user>\")) {
+            
+            $NewPaths = Confirm-UsersDirectory -Path $Path
 
-            $ExistingFiles = $Files | Where-Object { Test-Path (Join-Path -Path $Path -ChildPath $_) }
-            if ($ExistingFiles) {
-                Write-Output "Potential file IOCs found under $Path"
-                $ExistingFiles | ForEach-Object { Write-Output "$_ found!" }
-           
-            } else {
-                Write-Output "No files present under the $Path"
+            foreach ($NewPath in $NewPaths) {
+                Search-FilePathIOCs -Path $NewPath -Files $Files
             }
+           
         } else {
-            Write-Output "Directory $Path not found."
+
+            Search-FilePathIOCs -Path $Path -Files $Files
         }
     }
 
 }
 
-Search-FilePathIOCs -Group $Group
+Get-FilePathIOCs -Group $Group
