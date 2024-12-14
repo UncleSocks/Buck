@@ -6,7 +6,12 @@ $BackdoorDiplomacy = @{
     Name = "BackdoorDiplomacy"
     ID = "G0135"
     FilePathIOCs = @(
-        @{ Path = "c:\program files\windows nt\"
+        @{ Path = "c:\program files (x86)\windows sidebar\gadgets\" 
+           Files = @(
+           "credwiz.exe"
+           )
+        },
+        @{ Path = "c:\program files\windows nt\" 
            Files = @(
            "1.exe",
            "credwiz.exe",
@@ -179,6 +184,91 @@ $BackdoorDiplomacy = @{
            "winsecunicity.ini"
            )
         },
+        @{ Path = "c:\users\<user>\appdata\local\temp\3\"
+           Files = @(
+           "acrobat17.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\local\temp\4\"
+           Files = @(
+           "ld.dll",
+           "rar.exe",
+           "rar570.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\local\temp\"
+           Files = @(
+           "acrobat17.exe",
+           "ld.dll"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\local\virtualstore\"
+           Files = @(
+           "agent64.exe",
+           "igfxpers.exe",
+           "vmnat.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\local\vmnat\"
+           Files = @(
+           "vmnat.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\local\vmware\"
+           Files = @(
+           "t.exe",
+           "vmnat.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\roaming\microsoft\vault\"
+           Files = @(
+           "windowsazure.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\saved games\"
+           Files = @(
+           "nethood.exe"
+           )
+        },
+        @{ Path = "c:\users\<user>\appdata\roaming\microsoft\windows\network shortcuts\"
+           Files = @(
+           "nethood.exe"
+           )
+        },
+        @{ Path = "c:\users\public\"
+           Files = @(
+           "1.bin",
+           "11.bat",
+           "all1.txt",
+           "ass.bat",
+           "bin.rar",
+           "csvde_x64.exe",
+           "e.exe",
+           "ifsvc.exe",
+           "igfxpers.exe",
+           "info.bat",
+           "javanet.exe",
+           "logoutui.exe",
+           "nimscan.exe",
+           "procdump64.exe",
+           "pt.exe",
+           "ptg.exe",
+           "rar.exe",
+           "s.exe",
+           "set_empty.exe",
+           "sfthttpsrv.exe",
+           "ss.txt",
+           "sss.txt",
+           "tscan.exe",
+           "tscan32.exe",
+           "winsecunicity.exe"
+           )
+        },
+        @{ Path = "c:\users\public\nethood\"
+           Files = @(
+           "igfxpers.exe"
+           )
+        },
         @{ Path = "c:\windows\"
            Files = @(
            "alg.exe"
@@ -296,11 +386,6 @@ $BackdoorDiplomacy = @{
         @{ Path = "c:\windows\web\wallpaper\windows\"
            Files = @(
            "wordpadfilter.exe"
-           )
-        },
-        @{ Path = "c:\users\<user>\Documents\"
-           Files = @(
-           "Untitled2.ps1"
            )
         }
     )
