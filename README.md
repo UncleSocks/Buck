@@ -1,4 +1,4 @@
-# Buck: Automated Advanced Persistence Threat (APT) Hunter
+# Buck: Automated Advanced Persistence Threat (APT) Searcher
 
 ## Still Under Progress
 
