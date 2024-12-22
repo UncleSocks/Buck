@@ -456,6 +456,19 @@ Function Get-FilePathIOCs {
         }
     }
 
+    Get-IPAddressIOCs
+
+}
+
+
+Function Get-IPAddressIOCs {
+   
+    $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
+    $C2Addresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -Property RemoteAddress -Unique
+    
+    foreach ($C2Address in $C2Addresses) {
+        Write-Output $C2Address
+    }
 }
 
 Get-FilePathIOCs -Group $Group
