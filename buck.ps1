@@ -468,14 +468,6 @@ Function Get-FilePathIOCs {
         }
     }
 
-    #$PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
-    #$RemoteAddresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -Property RemoteAddress -Unique
-
-    #$Group.C2AddressIOCs
-
-    #$test2 = Compare-Object -ReferenceObject $Group.C2AddressIOCs -DifferenceObject $Group.C2AddressIOCs -IncludeEqual 
-    #Write-Output $test2
-
 }
 
 
