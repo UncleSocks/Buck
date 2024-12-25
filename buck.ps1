@@ -5,6 +5,18 @@ param([Array]$Group)
 $BackdoorDiplomacy = @{
     Name = "BackdoorDiplomacy"
     ID = "G0135"
+    C2AddressIOCs = @(
+        "185.80.201.87",
+        "140.82.38.177",
+        "199.247.19.24",
+        "208.85.23.64",
+        "70.34.248.149",
+        "136.244.112.39",
+        "43.251.105.139",
+        "103.152.14.162",
+        "152.32.181.55",
+        "192.155.86.128"
+        )
     FilePathIOCs = @(
         @{ Path = "c:\program files (x86)\windows sidebar\gadgets\" 
            Files = @(
@@ -456,19 +468,33 @@ Function Get-FilePathIOCs {
         }
     }
 
-    Get-IPAddressIOCs
+    #$PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
+    #$RemoteAddresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -Property RemoteAddress -Unique
+
+    #$Group.C2AddressIOCs
+
+    #$test2 = Compare-Object -ReferenceObject $Group.C2AddressIOCs -DifferenceObject $Group.C2AddressIOCs -IncludeEqual 
+    #Write-Output $test2
 
 }
 
 
 Function Get-IPAddressIOCs {
-   
-    $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
-    $C2Addresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -Property RemoteAddress -Unique
-    
-    foreach ($C2Address in $C2Addresses) {
-        Write-Output $C2Address
+
+    $C2Addresses = $Group.C2AddressIOCs
+
+    if ($C2Addresses) {
+
+        $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
+        $RemoteAddresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -ExpandProperty RemoteAddress -Unique
+
+        if ($RemoteAddresses) {
+            Compare-Object -ReferenceObject $C2Addresses -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
+        }
+
     }
+     
 }
 
 Get-FilePathIOCs -Group $Group
+Get-IPAddressIOCs -Group $Group
