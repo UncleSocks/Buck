@@ -446,7 +446,9 @@ Function Search-FilePathIOCs {
 Function Get-FilePathIOCs { 
     
     $Name = $Group.Name
-    Write-Output "Looking for file path IOCs of group: $Name"
+    Write-Output "Searching for IOCs for APT group: $Name"
+    Write-Output "Searching for file path IOCs"
+    Write-Output "=======================================================================[File Path IOCs]=======================================================================`n"
 
     foreach ($FilePathIOC in $Group.FilePathIOCs) {
         $Path = $FilePathIOC.Path
@@ -472,6 +474,9 @@ Function Get-FilePathIOCs {
 
 
 Function Get-IPAddressIOCs {
+    
+    Write-Output "Searching for C2 IP address IOCs"
+    Write-Output "`n=======================================================================[C2 IP Address IOCs]=======================================================================`n"
 
     $C2Addresses = $Group.C2AddressIOCs
 
