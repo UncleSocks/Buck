@@ -526,7 +526,7 @@ Function Get-C2IOCs {
     Write-Output "`nConsolidated domains list:"
     $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
         ForEach-Object {
-            if ($_ -match "((?:[a-zA-Z0-9-]+\.)(?!in-addr\.arpa)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
+            if ($_ -match "((?:[a-zA-Z0-9-]+\.){0,2}(?!in-addr\.arpa)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
                 $matches[1]
             }
         } | Select-Object -Unique
