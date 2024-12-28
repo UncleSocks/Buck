@@ -489,8 +489,6 @@ Function Get-C2IOCs {
                 } | 
                 Select-Object -ExpandProperty RemoteAddress -Unique
 
-        #Write-Output $RemoteAddresses
-
         if ($RemoteAddresses) {
             Compare-Object -ReferenceObject $C2Addresses -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
@@ -498,10 +496,9 @@ Function Get-C2IOCs {
     }
 
     #######
-    Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
-
     $Hostname = Hostname
 
+    Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
     $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
         Where-Object {
             $_.Id -eq '3008' -and
@@ -514,10 +511,26 @@ Function Get-C2IOCs {
             }
         } | Select-Object -Unique
 
+    Write-Output "Capturing DNS client cache..."
     $DNSClientCacheEntries = Get-DnsClientCache | Select-Object -ExpandProperty Entry -Unique
-    $DNSResolution = $RemoteAddresses | Where-Object {$_ -and $_ -ne ''} | ForEach-Object {Resolve-DnsName $_ -DnsOnly -ErrorAction SilentlyContinue} | Select-Object -ExpandProperty NameHost -Unique
+    
+    Write-Output "Performing reverse DNS lookup of remote addresses..."
+    $DNSResolution = $RemoteAddresses | 
+        Where-Object {$_ -and $_ -ne ''} | 
+        ForEach-Object {
+            Resolve-DnsName $_ -DnsOnly -QuickTimeout -ErrorAction SilentlyContinue
+        } | 
+        Select-Object -ExpandProperty NameHost -Unique
 
-    $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | Select-Object -Unique
+    Write-Output "`nConsolidated domains from different sources:"
+    $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
+        ForEach-Object {
+            if ($_ -match "([a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
+                $matches[1]
+            }
+        } | Select-Object -Unique
+    
+    
     Write-Output $CompleteDNS
     
     
