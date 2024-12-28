@@ -476,7 +476,7 @@ Function Get-FilePathIOCs {
 Function Get-C2IOCs {
     
     Write-Output "Searching for C2 IP address IOCs"
-    Write-Output "`n=======================================================================[C2 IP Address IOCs]=======================================================================`n"
+    Write-Output "`n=======================================================================[Comand & Control (C2) IOCs]=======================================================================`n"
 
     $C2Addresses = $Group.C2AddressIOCs
 
@@ -490,6 +490,7 @@ Function Get-C2IOCs {
                 Select-Object -ExpandProperty RemoteAddress -Unique
 
         if ($RemoteAddresses) {
+            Write-Output "Comparing remote IP addresses and the C2 IP address IOCs..."
             Compare-Object -ReferenceObject $C2Addresses -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
 
@@ -522,7 +523,7 @@ Function Get-C2IOCs {
         } | 
         Select-Object -ExpandProperty NameHost -Unique
 
-    Write-Output "`nConsolidated domains from different sources:"
+    Write-Output "`nConsolidated domains list:"
     $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
         ForEach-Object {
             if ($_ -match "([a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
