@@ -473,7 +473,7 @@ Function Get-FilePathIOCs {
 }
 
 
-Function Get-IPAddressIOCs {
+Function Get-C2IOCs {
     
     Write-Output "Searching for C2 IP address IOCs"
     Write-Output "`n=======================================================================[C2 IP Address IOCs]=======================================================================`n"
@@ -483,15 +483,45 @@ Function Get-IPAddressIOCs {
     if ($C2Addresses) {
 
         $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
-        $RemoteAddresses = Get-NetTCPConnection | Where-Object {$_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')} | Select-Object -ExpandProperty RemoteAddress -Unique
+        $RemoteAddresses = Get-NetTCPConnection |
+            Where-Object {
+                $_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')
+                } | 
+                Select-Object -ExpandProperty RemoteAddress -Unique
+
+        #Write-Output $RemoteAddresses
 
         if ($RemoteAddresses) {
             Compare-Object -ReferenceObject $C2Addresses -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
 
     }
-     
+
+    #######
+    Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
+
+    $Hostname = Hostname
+
+    $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
+        Where-Object {
+            $_.Id -eq '3008' -and
+            $_.Message -notmatch $Hostname -and
+            $_.Message -notmatch "..localmachine"
+        } |
+        ForEach-Object {
+            if ($_.Message -match "DNS query is completed for the name ([^,\s]+)") {
+                $matches[1]
+            }
+        } | Select-Object -Unique
+
+    $DNSClientCacheEntries = Get-DnsClientCache | Select-Object -ExpandProperty Entry -Unique
+    $DNSResolution = $RemoteAddresses | Where-Object {$_ -and $_ -ne ''} | ForEach-Object {Resolve-DnsName $_ -DnsOnly -ErrorAction SilentlyContinue} | Select-Object -ExpandProperty NameHost -Unique
+
+    $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | Select-Object -Unique
+    Write-Output $CompleteDNS
+    
+    
 }
 
 Get-FilePathIOCs -Group $Group
-Get-IPAddressIOCs -Group $Group
+Get-C2IOCs -Group $Group
