@@ -17,6 +17,30 @@ $BackdoorDiplomacy = @{
         "152.32.181.55",
         "192.155.86.128"
         )
+    C2DomainIOCs = @(
+        "cloud.microsoftshop.org",
+        "info.fazlollah.net",
+        "info.payamradio.com",
+        "mail.irir.org",
+        "news.alberto2011.com",
+        "picture.efanshion.com",
+        "plastic.delldrivers.in",
+        "proxy.oracleapps.org",
+        "srv.fazlollah.net",
+        "srv.payamradio.com",
+        "uc.ejalase.org",
+        "www.iranwatch.tech",
+        "www.iredugov.wiki",
+        "mci.ejalase.org",
+        "cloud.crmdev.org",
+        "soap.crmdev.org",
+        "cloud.fastpaymentservice.com",
+        "cloud.skypecloud.net",
+        "portal.skypecloud.net",
+        "api.vmwareapi.net",
+        "fcanet.microsoftshop.org",
+        "www.iransec.services"
+        )
     FilePathIOCs = @(
         @{ Path = "c:\program files (x86)\windows sidebar\gadgets\" 
            Files = @(
@@ -498,41 +522,48 @@ Function Get-C2IOCs {
 
     #######
     $Hostname = Hostname
-
-    Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
-    $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
-        Where-Object {
-            $_.Id -eq '3008' -and
-            $_.Message -notmatch $Hostname -and
-            $_.Message -notmatch "..localmachine"
-        } |
-        ForEach-Object {
-            if ($_.Message -match "DNS query is completed for the name ([^,\s]+)") {
-                $matches[1]
-            }
-        } | Select-Object -Unique
-
-    Write-Output "Capturing DNS client cache..."
-    $DNSClientCacheEntries = Get-DnsClientCache | Select-Object -ExpandProperty Entry -Unique
+    $C2Domains = $Group.C2DomainIOCs
     
-    Write-Output "Performing reverse DNS lookup of remote addresses..."
-    $DNSResolution = $RemoteAddresses | 
-        Where-Object {$_ -and $_ -ne ''} | 
-        ForEach-Object {
-            Resolve-DnsName $_ -DnsOnly -QuickTimeout -ErrorAction SilentlyContinue
-        } | 
-        Select-Object -ExpandProperty NameHost -Unique
+    if ($C2Domains) {
 
-    Write-Output "`nConsolidated domains list:"
-    $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
-        ForEach-Object {
-            if ($_ -match "((?:[a-zA-Z0-9-]+\.){0,2}(?!in-addr\.arpa)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
-                $matches[1]
-            }
-        } | Select-Object -Unique
+        Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
+        $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
+            Where-Object {
+                $_.Id -eq '3008' -and
+                $_.Message -notmatch $Hostname -and
+                $_.Message -notmatch "..localmachine"
+            } |
+            ForEach-Object {
+                if ($_.Message -match "DNS query is completed for the name ([^,\s]+)") {
+                    $matches[1]
+                }
+            } | Select-Object -Unique
+
+        Write-Output "Capturing DNS client cache..."
+        $DNSClientCacheEntries = Get-DnsClientCache | Select-Object -ExpandProperty Entry -Unique
+    
+        Write-Output "Performing reverse DNS lookup of remote addresses..."
+        $DNSResolution = $RemoteAddresses | 
+            Where-Object {$_ -and $_ -ne ''} | 
+            ForEach-Object {
+                Resolve-DnsName $_ -DnsOnly -QuickTimeout -ErrorAction SilentlyContinue
+            } | 
+            Select-Object -ExpandProperty NameHost -Unique
+
+        Write-Output "`nConsolidated domains list:"
+        $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
+            ForEach-Object {
+                if ($_ -match "((?:[a-zA-Z0-9-]+\.){0,2}(?!in-addr\.arpa)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
+                    $matches[1]
+                }
+            } | Select-Object -Unique
     
     
-    Write-Output $CompleteDNS
+        Write-Output $CompleteDNS
+
+        Compare-Object -ReferenceObject $C2Domains -DifferenceObject $CompleteDNS -IncludeEqual -ExcludeDifferent
+
+    }
     
     
 }
