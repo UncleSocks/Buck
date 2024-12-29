@@ -4,8 +4,8 @@ param([Array]$Group)
 
 $BackdoorDiplomacy = @{
     Name = "BackdoorDiplomacy"
-    ID = "G0135"
-    C2AddressIOCs = @(
+    MITREID = "G0135"
+    AddressIOCs = @(
         "185.80.201.87",
         "140.82.38.177",
         "199.247.19.24",
@@ -17,7 +17,7 @@ $BackdoorDiplomacy = @{
         "152.32.181.55",
         "192.155.86.128"
         )
-    C2DomainIOCs = @(
+    DomainIOCs = @(
         "cloud.microsoftshop.org",
         "info.fazlollah.net",
         "info.payamradio.com",
@@ -497,34 +497,50 @@ Function Get-FilePathIOCs {
 }
 
 
-Function Get-C2IOCs {
+Function Get-RemoteAddresses {
+
+    $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
+    
+    $RemoteAddresses = Get-NetTCPConnection |
+    Where-Object {
+        $_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')
+        } | 
+        Select-Object -ExpandProperty RemoteAddress -Unique
+
+    Return $RemoteAddresses
+}
+
+
+Function Get-AddressIOCs {
     
     Write-Output "Searching for C2 IP address IOCs"
     Write-Output "`n=======================================================================[Comand & Control (C2) IOCs]=======================================================================`n"
 
-    $C2Addresses = $Group.C2AddressIOCs
+    $AddressIOCs = $Group.AddressIOCs
 
-    if ($C2Addresses) {
+    if ($AddressIOCs) {
 
-        $PrivateAddressRegex = '^((?:(?:^127\.)|(?:^192\.168\.)|(?:^10\.)|(?:^172\.1[6-9]\.)|(?:^172\.2[0-9]\.)|(?:^172\.3[0-1]\.)|(?:^::1$)|(?:^[fF][cCdD])/)|([a-zA-Z]))'
-        $RemoteAddresses = Get-NetTCPConnection |
-            Where-Object {
-                $_.RemoteAddress -notmatch $PrivateAddressRegex -and $_.RemoteAddress -notin @('0.0.0.0', '::')
-                } | 
-                Select-Object -ExpandProperty RemoteAddress -Unique
+        $RemoteAddresses = Get-RemoteAddresses
+        Write-Output $RemoteAddresses
 
         if ($RemoteAddresses) {
             Write-Output "Comparing remote IP addresses and the C2 IP address IOCs..."
-            Compare-Object -ReferenceObject $C2Addresses -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
+            Compare-Object -ReferenceObject $AddressIOCs -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
 
-    }
+    }    
+}
 
-    #######
+
+Function Get-DomainIOCs {
+
     $Hostname = Hostname
-    $C2Domains = $Group.C2DomainIOCs
-    
-    if ($C2Domains) {
+    $DomainIOCs = $Group.DomainIOCs
+
+    if ($DomainIOCs) {
+
+        $RemoteAddresses = Get-RemoteAddresses
+        Write-Output $RemoteAddresses
 
         Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
         $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
@@ -561,12 +577,13 @@ Function Get-C2IOCs {
     
         Write-Output $CompleteDNS
 
-        Compare-Object -ReferenceObject $C2Domains -DifferenceObject $CompleteDNS -IncludeEqual -ExcludeDifferent
+        Compare-Object -ReferenceObject $DomainIOCs -DifferenceObject $CompleteDNS -IncludeEqual -ExcludeDifferent
 
     }
-    
-    
+
 }
 
+
 Get-FilePathIOCs -Group $Group
-Get-C2IOCs -Group $Group
+Get-AddressIOCs -Group $Group
+Get-DomainIOCs -Group $Group
