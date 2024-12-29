@@ -5,6 +5,10 @@ param([Array]$Group)
 $BackdoorDiplomacy = @{
     Name = "BackdoorDiplomacy"
     MITREID = "G0135"
+    Source = @{
+        Researcher = "BitDefender"
+        URL = "https://www.bitdefender.com/files/News/CaseStudies/study/426/Bitdefender-PR-Whitepaper-BackdoorDiplomacy-creat6507-en-EN.pdf"
+    }
     AddressIOCs = @(
         "185.80.201.87",
         "140.82.38.177",
@@ -529,7 +533,8 @@ $CeranaKeeper = @{
             "37db71172ab64c108fedca85e5be51a499b2ba12",
             "50eee1b2601aebae0ce7b360d7c970b7c1ee0866",
             "42a3d252faa7d7457c7f708ec6f44f3c1afd843e",
-            "f2329c6066497068ff3e1cec0be20461f23d80cc"
+            "f2329c6066497068ff3e1cec0be20461f23d80cc",
+            "47A86605EA0A0B6A6868A2BC2A270547ED9B13E7"
            )
         }
     )
@@ -710,20 +715,27 @@ Function Get-HashIOCs {
         $Algorithm = $FileHashIOCs.Algorithm
         $Extensions = if ($FileHashIOCs.Extensions) {$FileHashIOCs.Extensions} else {"*.*"}
         $Directory = if ($FileHashIOCs.Directory) {$FileHashIOCs.Directory} else {"c:\"}
+        $HashIOCs = $FileHashIOCs.Hashes
 
-        Write-Output $Extensions
+        Write-Output "`nCapturing all hashes from directory $Directory recusively..."
+        Get-ChildItem -Path $Directory -Recurse -File -Force -Include $Extensions -ErrorAction SilentlyContinue | ForEach-Object {
+            
+            $FileHash = Get-FileHash -Path $_.FullName -Algorithm $Algorithm | Select-Object -ExpandProperty Hash
 
-        Get-ChildItem -Path $Directory -Recurse -File -Force -Include $Extensions -ErrorAction SilentlyContinue | 
-            Get-FileHash -Algorithm $Algorithm | 
-            Select-Object -ExpandProperty Hash
+            if ($FileHash -in $HashIOCs) {
+                Write-Host "Matched a hash: $($_.FullName)" -ForegroundColor Green
+            }
 
-        #Write-Output $SHA1Hashes
+        }
+        
+        Write-Output "Detecting hash IOCs..."
+        Compare-Object -ReferenceObject $HashIOCs -DifferenceObject $Hashes -IncludeEqual -ExcludeDifferent
     }
 
 }
 
 
-#Get-FilePathIOCs -Group $Group
-#Get-AddressIOCs -Group $Group
-#Get-DomainIOCs -Group $Group
+Get-FilePathIOCs -Group $Group
+Get-AddressIOCs -Group $Group
+Get-DomainIOCs -Group $Group
 Get-HashIOCs -Group $Group
