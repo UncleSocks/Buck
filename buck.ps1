@@ -651,8 +651,6 @@ Function Get-AddressIOCs {
             $AddressIOCsOutput = Compare-Object -ReferenceObject $AddressIOCs -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
 
-
-
     }    
 }
 
