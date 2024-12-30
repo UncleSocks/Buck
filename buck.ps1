@@ -533,8 +533,7 @@ $CeranaKeeper = @{
             "37db71172ab64c108fedca85e5be51a499b2ba12",
             "50eee1b2601aebae0ce7b360d7c970b7c1ee0866",
             "42a3d252faa7d7457c7f708ec6f44f3c1afd843e",
-            "f2329c6066497068ff3e1cec0be20461f23d80cc",
-            "47A86605EA0A0B6A6868A2BC2A270547ED9B13E7"
+            "f2329c6066497068ff3e1cec0be20461f23d80cc"
            )
         }
     )
@@ -547,7 +546,7 @@ Function Confirm-UsersDirectory {
     $NewPaths = @()
     $Users = Get-ChildItem -Path "c:\users\" -Name -Exclude "Public"
 
-    foreach ($User in $Users) {
+    ForEach ($User in $Users) {
         $NewPath = $Path.Replace("<user>", $user)
         $NewPaths += $NewPath
     }
@@ -563,17 +562,18 @@ Function Search-FilePathIOCs {
          )
 
     if (Test-Path -Path $Path) {
-        Write-Output "Directory $Path exists. Checking for IOC files..."
+        Write-Host "[Directory Found]: $Path" -ForegroundColor Yellow
 
         $ExistingFiles = $Files | Where-Object { Test-Path (Join-Path -Path $Path -ChildPath $_) }
+
         if ($ExistingFiles) {
-            Write-Output "Potential file IOCs found under $Path"
-            $ExistingFiles | ForEach-Object { Write-Output "$_ found!" }
+            $ExistingFiles | ForEach-Object { Write-Host "`t[File IOC Found]: $_" -BackgroundColor Red}
+        
         } else {
-            Write-Output "No files present under the $Path"
+            Write-Host "`tNo file IOC found under this directory." -ForegroundColor Green
         }
     } else {
-        Write-Output "Directory $Path not found"
+        Write-Host "[Directory Not Found]: $Path"
     }
 
     Return
@@ -582,16 +582,14 @@ Function Search-FilePathIOCs {
 
 Function Get-FilePathIOCs { 
     
-    $Name = $Group.Name
-    Write-Output "Searching for IOCs for APT group: $Name"
-    Write-Output "Searching for file path IOCs"
-    Write-Output "=======================================================================[File Path IOCs]=======================================================================`n"
+    Write-Output "=======================================================================[File IOCs]=======================================================================`n"
+    Write-Output "Searching for potential file IOCs...`n"
 
     $FilePathIOCs = $Group.FilePathIOCs
     
     if ($FilePathIOCs) {
 
-        foreach ($FilePathIOC in $FilePathIOCs) {
+        ForEach ($FilePathIOC in $FilePathIOCs) {
             $Path = $FilePathIOC.Path
             $Files = $FilePathIOC.Files
 
@@ -601,7 +599,7 @@ Function Get-FilePathIOCs {
             
                 $NewPaths = Confirm-UsersDirectory -Path $Path
 
-                foreach ($NewPath in $NewPaths) {
+                ForEach ($NewPath in $NewPaths) {
                     Search-FilePathIOCs -Path $NewPath -Files $Files
                 }
            
@@ -612,7 +610,7 @@ Function Get-FilePathIOCs {
         }
 
     } else {
-        Write-Output "[Skipping] No file path IOC specified."
+        Write-Output "No file path IOC specified... skipping this search."
     }
 
 }
@@ -634,20 +632,26 @@ Function Get-RemoteAddresses {
 
 Function Get-AddressIOCs {
     
-    Write-Output "Searching for C2 IP address IOCs"
     Write-Output "`n=======================================================================[Comand & Control (C2) IOCs]=======================================================================`n"
+    Write-Output "Searching for C2 IP address IOCs..."
 
     $AddressIOCs = $Group.AddressIOCs
 
     if ($AddressIOCs) {
-
+        
+        Write-Host "Getting the list of remote addresses using the NetTCPConnection sub-module...`n"
         $RemoteAddresses = Get-RemoteAddresses
+        
+        Write-Host "---------------------------------------"
         Write-Output $RemoteAddresses
+        Write-Host "---------------------------------------`n"
 
         if ($RemoteAddresses) {
             Write-Output "Comparing remote IP addresses and the C2 IP address IOCs..."
-            Compare-Object -ReferenceObject $AddressIOCs -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
+            $AddressIOCsOutput = Compare-Object -ReferenceObject $AddressIOCs -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
+
+
 
     }    
 }
@@ -661,7 +665,6 @@ Function Get-DomainIOCs {
     if ($DomainIOCs) {
 
         $RemoteAddresses = Get-RemoteAddresses
-        Write-Output $RemoteAddresses
 
         Write-Output "`nCapturing DNS queries to external destinations from Windows DNS Client Event ID 3008..."
         $DNSClientEventEntries = Get-WinEvent -LogName "Microsoft-Windows-DNS-Client/Operational" |
