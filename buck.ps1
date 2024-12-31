@@ -570,7 +570,7 @@ Function Search-FilePathIOCs {
             $ExistingFiles | ForEach-Object { Write-Host "`t[File IOC Found]: $_" -BackgroundColor Red}
         
         } else {
-            Write-Host "`tNo file IOC found under this directory." -ForegroundColor Green
+            Write-Host "`tNo matching file IOC found under this directory." -ForegroundColor Green
         }
     } else {
         Write-Host "[Directory Not Found]: $Path"
@@ -582,8 +582,8 @@ Function Search-FilePathIOCs {
 
 Function Get-FilePathIOCs { 
     
-    Write-Output "=======================================================================[File IOCs]=======================================================================`n"
-    Write-Output "Searching for potential file IOCs...`n"
+    Write-Host "=======================================================================[File IOCs]=======================================================================`n" -ForegroundColor Magenta
+    Write-Output "Searching for potential file IOCs using Test-Path sub-module...`n"
 
     $FilePathIOCs = $Group.FilePathIOCs
     
@@ -632,8 +632,8 @@ Function Get-RemoteAddresses {
 
 Function Get-AddressIOCs {
     
-    Write-Output "`n=======================================================================[Comand & Control (C2) IOCs]=======================================================================`n"
-    Write-Output "Searching for C2 IP address IOCs..."
+    Write-Host "`n=======================================================================[IP Address IOCs]=======================================================================`n" -ForegroundColor Magenta
+    Write-Output "Searching for IP address IOCs..."
 
     $AddressIOCs = $Group.AddressIOCs
 
@@ -642,20 +642,30 @@ Function Get-AddressIOCs {
         Write-Host "Getting the list of remote addresses using the NetTCPConnection sub-module...`n"
         $RemoteAddresses = Get-RemoteAddresses
         
+        Write-Host "Captured Remote Addresses"
         Write-Host "---------------------------------------"
         Write-Output $RemoteAddresses
         Write-Host "---------------------------------------`n"
 
         if ($RemoteAddresses) {
-            Write-Output "Comparing remote IP addresses and the C2 IP address IOCs..."
+            Write-Output "Comparing remote IP addresses and the IP address IOCs..."
             $AddressIOCsOutput = Compare-Object -ReferenceObject $AddressIOCs -DifferenceObject $RemoteAddresses -IncludeEqual -ExcludeDifferent
         }
 
+        if ($AddressIOCsOutput) {
+            $AddressIOCsOutput | ForEach-Object { Write-Host "`t[Address IOC Found]: $_" -BackgroundColor Red }
+        
+        } else {
+            Write-Host "`tNo matching IP address IOC found." -ForegroundColor Green
+        }
     }    
 }
 
 
 Function Get-DomainIOCs {
+
+    Write-Host "`n=======================================================================[Domain IOCs]=======================================================================`n" -ForegroundColor Magenta
+    Write-Output "Searching for domains IOCs..."
 
     $Hostname = Hostname
     $DomainIOCs = $Group.DomainIOCs
@@ -677,10 +687,10 @@ Function Get-DomainIOCs {
                 }
             } | Select-Object -Unique
 
-        Write-Output "Capturing DNS client cache..."
+        Write-Output "Gathering DNS client cache entries..."
         $DNSClientCacheEntries = Get-DnsClientCache | Select-Object -ExpandProperty Entry -Unique
     
-        Write-Output "Performing reverse DNS lookup of remote addresses..."
+        Write-Output "Performing reverse DNS lookup of remote addresses from NetTCPConnection sub-module..."
         $DNSResolution = $RemoteAddresses | 
             Where-Object {$_ -and $_ -ne ''} | 
             ForEach-Object {
@@ -688,18 +698,28 @@ Function Get-DomainIOCs {
             } | 
             Select-Object -ExpandProperty NameHost -Unique
 
-        Write-Output "`nConsolidated domains list:"
+        Write-Output "Consolidating gathered domain entries..."
         $CompleteDNS = ($DNSClientEventEntries + $DNSClientCacheEntries + $DNSResolution) | 
             ForEach-Object {
-                if ($_ -match "((?:[a-zA-Z0-9-]+\.){0,2}(?!in-addr\.arpa)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
+                if ($_ -match "((?:[a-zA-Z0-9-]+\.){0,2}(?!(\b(in-addr|ip6)\.arpa)$)[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+)$") {
                     $matches[1]
                 }
             } | Select-Object -Unique
     
-    
+        Write-Host "`nConsolidated Domain Entries"
+        Write-Host "---------------------------------------"
         Write-Output $CompleteDNS
+        Write-Host "---------------------------------------`n"
 
-        Compare-Object -ReferenceObject $DomainIOCs -DifferenceObject $CompleteDNS -IncludeEqual -ExcludeDifferent
+        Write-Output "Comparing consolidated domain entries and the domain IOCs..."
+        $DomainIOCsOutput = Compare-Object -ReferenceObject $DomainIOCs -DifferenceObject $CompleteDNS -IncludeEqual -ExcludeDifferent | Select-Object -ExpandProperty InputObject
+
+        if ($DomainIOCsOutput) {
+            $DomainIOCsOutput | ForEach-Object { Write-Host "`t[Domain IOC Found]: $_" -BackgroundColor Red }
+        
+        } else {
+            Write-Host "`tNo matching domain IOC found." -ForegroundColor Green
+        }
 
     }
 
@@ -708,7 +728,8 @@ Function Get-DomainIOCs {
 
 Function Get-HashIOCs {
 
-    Write-Output "Checking for hash IOCs"
+    Write-Host "`n=======================================================================[Hash IOCs]=======================================================================`n" -ForegroundColor Magenta
+    Write-Output "Checking for hash IOCs..."
     $FileHashIOCs = $Group.FileHashIOCs
 
     if ($FileHashIOCs) {
