@@ -1,5 +1,5 @@
 ﻿
-param([Array]$Group)
+param([Hashtable]$Group)
 
 
 $BackdoorDiplomacy = @{
@@ -582,6 +582,8 @@ Function Search-FilePathIOCs {
 
 Function Get-FilePathIOCs { 
     
+    param([Hashtable]$Group)
+
     Write-Host "=======================================================================[File IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Searching for potential file IOCs using Test-Path sub-module...`n"
 
@@ -631,6 +633,8 @@ Function Get-RemoteAddresses {
 
 
 Function Get-AddressIOCs {
+
+    #param([Hashtable]$Group)
     
     Write-Host "`n=======================================================================[IP Address IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Searching for IP address IOCs..."
@@ -663,6 +667,8 @@ Function Get-AddressIOCs {
 
 
 Function Get-DomainIOCs {
+
+    #param([Hashtable]$Group)
 
     Write-Host "`n=======================================================================[Domain IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Searching for domains IOCs..."
@@ -728,6 +734,8 @@ Function Get-DomainIOCs {
 
 Function Get-HashIOCs {
 
+    #param([Hashtable]$Group)
+
     Write-Host "`n=======================================================================[Hash IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Checking for hash IOCs..."
     $FileHashIOCs = $Group.FileHashIOCs
@@ -745,13 +753,10 @@ Function Get-HashIOCs {
             $FileHash = Get-FileHash -Path $_.FullName -Algorithm $Algorithm | Select-Object -ExpandProperty Hash
 
             if ($FileHash -in $HashIOCs) {
-                Write-Host "Matched a hash: $($_.FullName)" -ForegroundColor Green
+                Write-Host "`t[Hash IOC Found]: $FileHash | $($_.FullName)" -BackgroundColor Red
             }
 
         }
-        
-        Write-Output "Detecting hash IOCs..."
-        Compare-Object -ReferenceObject $HashIOCs -DifferenceObject $Hashes -IncludeEqual -ExcludeDifferent
     }
 
 }
