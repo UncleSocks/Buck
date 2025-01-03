@@ -47,6 +47,7 @@ $BackdoorDiplomacy = @{
         )
     FileHashIOCs = @(
         @{ Algorithm = "SHA256"
+           Directory = "C:\Program Files"
            Hashes = @(
            "06faa40b967de7168d16fec0519b77c5e319c6dc021578ed1eb8b337879018fe",
            "eff22d43a0e66e4df60ab9355fa41b73481faea4b3aa6905eac3888bc1a62ffa",
@@ -110,8 +111,7 @@ $BackdoorDiplomacy = @{
            "05acd1bb524d73d9bc4cae24f25b445a0d9194d702263cd16305499560ae6d3a",
            "ee7b0b19240e1083ca8c6183b578abc70f19b7c99c91af9842338524fa6b879e",
            "ab0bd2d1cd9f27532e8f0da8d0ebf6bbbfc1e5e96a78f436a52e62d6645d62a2",
-           "bc5f0aa3235d6617910f04e7c2a30554fcead33560f8821cf40b3c0873d38a7b",
-           "3c09739afdcefc7700e3bd48db576cc4156934c9556d6436e7aca7474ef638a2"
+           "bc5f0aa3235d6617910f04e7c2a30554fcead33560f8821cf40b3c0873d38a7b"
            )
         }
     )
@@ -523,6 +523,7 @@ $CeranaKeeper = @{
     )
     FileHashIOCs = @(
         @{ Algorithm = "SHA1"
+           Directory = "C:\Program Files\"
            Extensions = @("*.dll", "*.exe", "*.orp")
            Hashes = @(
             "8e3b3c600ab812537a84409adfc5169518862fd3",
@@ -612,7 +613,7 @@ Function Get-FilePathIOCs {
         }
 
     } else {
-        Write-Output "No file path IOC specified... skipping this search."
+        Write-Output "No file path IOC available. Skipping this search."
     }
 
 }
@@ -634,7 +635,7 @@ Function Get-RemoteAddresses {
 
 Function Get-AddressIOCs {
 
-    #param([Hashtable]$Group)
+    param([Hashtable]$Group)
     
     Write-Host "`n=======================================================================[IP Address IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Searching for IP address IOCs..."
@@ -668,7 +669,7 @@ Function Get-AddressIOCs {
 
 Function Get-DomainIOCs {
 
-    #param([Hashtable]$Group)
+    param([Hashtable]$Group)
 
     Write-Host "`n=======================================================================[Domain IOCs]=======================================================================`n" -ForegroundColor Magenta
     Write-Output "Searching for domains IOCs..."
@@ -734,11 +735,13 @@ Function Get-DomainIOCs {
 
 Function Get-HashIOCs {
 
-    #param([Hashtable]$Group)
+    param([Hashtable]$Group)
 
     Write-Host "`n=======================================================================[Hash IOCs]=======================================================================`n" -ForegroundColor Magenta
-    Write-Output "Checking for hash IOCs..."
+    Write-Output "Searching for file hash IOCs..."
     $FileHashIOCs = $Group.FileHashIOCs
+
+    $FileCounter = 0
 
     if ($FileHashIOCs) {
         
@@ -749,11 +752,14 @@ Function Get-HashIOCs {
 
         Write-Output "`nCapturing all hashes from directory $Directory recusively..."
         Get-ChildItem -Path $Directory -Recurse -File -Force -Include $Extensions -ErrorAction SilentlyContinue | ForEach-Object {
-            
+           
             $FileHash = Get-FileHash -Path $_.FullName -Algorithm $Algorithm | Select-Object -ExpandProperty Hash
+           
+            Write-Progress -Activity "Searching for file hash IOCs..." -Status "Files processed: $FileCounter | Current Directory: $($_.Directory)"  -PercentComplete (($FileCounter %100) * 1)
+            $FileCounter++
 
             if ($FileHash -in $HashIOCs) {
-                Write-Host "`t[Hash IOC Found]: $FileHash | $($_.FullName)" -BackgroundColor Red
+                Write-Host "`t[File Hash IOC Found]: $FileHash | $($_.FullName)" -BackgroundColor Red
             }
 
         }
