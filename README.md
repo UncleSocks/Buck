@@ -1,4 +1,4 @@
-# Buck: Automated Advanced Persistence Threat (APT) IOC Detection
+# Buck: Automated Indicator of Compromise (IOC) Detection
 
 ## Still Under Progress
 
