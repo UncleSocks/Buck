@@ -66,7 +66,7 @@ As previously stated, the script displays the consolidated domain entries from t
 
 ### File Hashes
 
-A progress bar will be shown, displaying the number of processed files and the current directory:
+A progress bar will be shown, displaying the number of processed files and the current directory. To make the search more efficient, it is recommended to specify a directory and/or file extensions.
 
 ![image](https://github.com/user-attachments/assets/74f7dde2-ef82-432d-8164-aff58ef0cca1)
 
