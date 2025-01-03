@@ -242,5 +242,3 @@ Get-FilePathIOCs
 Get-AddressIOCs
 Get-DomainIOCs
 Get-HashIOCs
-
-$BackdoorDiplomacy | ConvertTo-Json
