@@ -1,4 +1,4 @@
-# Buck: Automated Advanced Persistence Threat (APT) Searcher
+# Buck: Automated Advanced Persistence Threat (APT) IOC Detection
 
 ## Still Under Progress
 
