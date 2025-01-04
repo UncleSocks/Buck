@@ -20,7 +20,7 @@ The script simply runs a **Test-Path** to check if a file exists within the spec
 
 ### File Hashes
 
-The script captures the file hash with the **Get-FileHash** sub-module and supports MD5, SHA1, and SHA256 algorithms.
+The script captures the file hash with the **Get-FileHash** sub-module and supports MD5, SHA1, SHA256, SHA384, and SHA512 algorithms.
 
 ### IP Addresses
 
