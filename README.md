@@ -1,6 +1,6 @@
-# Buck: Automated Indicator of Compromise (IOC) Detection
+# Buck: Automated Indicator of Compromise (IOC) Scanner
 
-An open-source PowerShell script to automate indicator of compromise (IOC) detection on Windows machines. It checks for the following IOCs: File Paths, File Hashes, IP Addresses, and Domains. A JSON file containing the IOCs is required to be fed to the script for it to work.
+An open-source and easy-to-use PowerShell script to automate indicator of compromise (IOC) scanning on Windows machines. It checks for the following IOCs: File Paths, File Hashes, IP Addresses, and Domains. Users will need to specify a JSON file containing the IOCs (see files within the IOCs directory for reference) and run the script.
 
 To run the script, specify the JSON file location with the `-IOCFilePath` option, for example:
 ```
@@ -16,17 +16,17 @@ The script's PowerShell (PS) modules and sub-modules are pre-built; no import is
 
 ### File Paths
 
-The script simply runs a **Test-Path** to check if a file exists within the specified path. This detection checks for the existence of complete file path IOCs (i.e., c:\programdata\microsoft\diagnosis\etllogs\vmnat.exe).
+The script runs a **Test-Path** to check if a file exists within the specified path. This detection checks for the existence of complete file path IOCs (i.e., c:\programdata\microsoft\diagnosis\etllogs\vmnat.exe).
 
 ### File Hashes
 
-The script captures the file hash with the **Get-FileHash** sub-module and supports MD5, SHA1, and SHA256 algorithms.
+The script captures the file hash with the **Get-FileHash** sub-module and supports MD5, SHA1, SHA256, SHA384, and SHA512 algorithms.
 
 ### IP Addresses
 
 The **Get-NetTCPConnection** sub-module to identify remote addresses. It leverages a regular expression (regex) to remote private IP addresses (i.e., loopback and RFC 1918). 
 
-Please note that this is a _point-in-time_ detection and can potentially miss certain connections depending on when the script was run. As a result, no connection state filter is applied to capture as many remote addresses as possible.
+Please note that this is a _point-in-time_ scan and can potentially miss certain connections depending on when the script was run. As a result, no connection state filter is applied to capture as many remote addresses as possible.
 
 ### Domains
 
