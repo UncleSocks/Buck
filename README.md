@@ -40,6 +40,10 @@ The script uses JSON files for its IOC feeds. You can refer to the files in the 
 
 For the file hash IOCs, you can specify a _directory_ and the _extensions_ to make the search efficient. If no _directory_ is specified, the script will attempt to capture all file hash recursively from the C: drive. Additionally, if no _extension_ is included, it will include all file extensions (i.e., *.*)
 
+### Available JSON IOC Files
+
+I have added JSON IOC files in this repository for others to use -- most are from the ESET research team (hats off to these guys).
+
 ## Output
 
 The script divides the console output per IOC type and will highlight, in red, any IOC it finds. 
