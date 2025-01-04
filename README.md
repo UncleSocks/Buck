@@ -74,3 +74,6 @@ When a file hash IOC matches, it returns the hash and the full path location.
 
 ![image](https://github.com/user-attachments/assets/6fdf19ed-aa68-4100-8687-d5d15c40552f)
 
+## Future Potential Developments
+- Implement Windows Defender Firewall logs to capture more remote addresses.
+
