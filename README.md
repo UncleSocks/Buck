@@ -1,4 +1,4 @@
-# Buck: Automated Indicator of Compromise (IOC) Detection
+# Buck: Automated Indicator of Compromise (IOC) Scanner
 
 An open-source PowerShell script to automate indicator of compromise (IOC) detection on Windows machines. It checks for the following IOCs: File Paths, File Hashes, IP Addresses, and Domains. A JSON file containing the IOCs is required to be fed to the script for it to work.
 
