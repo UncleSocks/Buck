@@ -3,7 +3,7 @@
     "Description": "N/A",
     "MITREId": "N/A",
     "Source": {
-        "Researcher": "ESAT",
+        "Researcher": "ESET",
         "URL": "https://github.com/eset/malware-ioc/tree/master/ceranakeeper"
     },
     "IOCs": {
