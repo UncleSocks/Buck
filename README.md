@@ -66,11 +66,14 @@ As previously stated, the script displays the consolidated domain entries from t
 
 ### File Hashes
 
-A progress bar will be shown, displaying the number of processed files and the current directory:
+A progress bar will be shown, displaying the number of processed files and the current directory. To make the search more efficient, it is recommended to specify a directory and/or file extensions.
 
 ![image](https://github.com/user-attachments/assets/74f7dde2-ef82-432d-8164-aff58ef0cca1)
 
 When a file hash IOC matches, it returns the hash and the full path location.
 
 ![image](https://github.com/user-attachments/assets/6fdf19ed-aa68-4100-8687-d5d15c40552f)
+
+## Future Potential Developments
+- Implement Windows Defender Firewall logs to capture more remote addresses.
 
