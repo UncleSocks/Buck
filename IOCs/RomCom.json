@@ -5,7 +5,8 @@
     "MITREId": "N/A",
     "Source": {
         "Reseacher": "ESET",
-        "URL": "https://www.welivesecurity.com/en/eset-research/romcom-exploits-firefox-and-windows-zero-days-in-the-wild/"
+        "URL": "https://www.welivesecurity.com/en/eset-research/romcom-exploits-firefox-and-windows-zero-days-in-the-wild/",
+        "License": "BSD-2-Clause License"
     },
     "IOCs": {
         "Addresses": [

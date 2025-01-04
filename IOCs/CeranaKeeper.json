@@ -4,7 +4,8 @@
     "MITREId": "N/A",
     "Source": {
         "Researcher": "ESET",
-        "URL": "https://github.com/eset/malware-ioc/tree/master/ceranakeeper"
+        "URL": "https://github.com/eset/malware-ioc/tree/master/ceranakeeper",
+        "License": "BSD-2-Clause License"
     },
     "IOCs": {
         "Addresses": [
