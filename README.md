@@ -63,7 +63,7 @@ The script will display the captured remote addresses from the **Get-NetTCPConne
 
 ### Domains
 
-As previously stated, the script displays the consolidated domain entries from the three sources. The script will state, in green text, if no IOC matches.
+The script displays the consolidated domain entries from the three sources. The script will state, in green text, if no IOC matches.
 
 ![image](https://github.com/user-attachments/assets/a3ec4976-57dc-4134-8649-a0b64298b6fc)
 
