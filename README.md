@@ -34,15 +34,50 @@ Consolidated domain entries from _Windows DNS Client Event ID 3008_, _DNS Client
 
 This is also a _point-in-time_ detection, which can also potentially result in missed domain entries. Furthermore, if the _Windows DNS Client_ event is disabled, fewer domain entries can be captured by the script.
 
-## IOC JSON File
+## IOC Feed
 
 The script uses JSON files for its IOC feeds. You can refer to the files in the **IOC** directory for the format. The JSON file can also include additional information about the threat actor, such as its description, MITRE ID, etc. This will not affect the script's functionality.
 
 For the file hash IOCs, you can specify a _directory_ and the _extensions_ to make the search efficient. If no _directory_ is specified, the script will attempt to capture all file hashes recursively from the C: drive. Additionally, if no _extension_ is included, it will include all file extensions (i.e., *.*)
 
-### Available JSON IOC Files
+I have added JSON IOC files in this repository for others to use and as a reference for creating your own IOC feed -- most are from the ESET research team (hats off to these guys).
 
-I have added JSON IOC files in this repository for others to use -- most are from the ESET research team (hats off to these guys).
+### IOC Feed Format
+
+Below is the general format for creating a JSON IOC Feed:
+
+```
+{
+  "IOCs": {
+    "Addresses": [
+      "<AddressOne>",
+      "<AddressTwo>"
+    ],
+    "Domains": [
+      "<DomainOne>",
+      "<DomainTwo>"
+    ],
+    "FileHashes": {
+      "Algorithm": "<MD5/SHA1/SHA256/SHA384/SHA512>", (Optional)
+      "Extensions": ["*.<ExtensionOne", "*.<ExtensionTwo>"], (Optional)
+      "Hashes": [
+        "<HashOne>",
+        "<HashTwo>"
+      ]
+    },
+    "FilePaths": [
+      {
+        "Path": "<C:\\Path\\>",
+        "Files": ["<FileOne>"]
+      },
+      {
+        "Path": "<C:\\Path\\>",
+        "Files": ["<FileOne"", "<FileTwo>"]
+      }      
+    ]
+  }
+} 
+```
 
 ## Output
 
